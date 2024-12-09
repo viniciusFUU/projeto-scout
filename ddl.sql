@@ -1,4 +1,3 @@
-drop database scout;
 create database scout;
 use scout;
 
@@ -66,5 +65,29 @@ create table match_stats(
     foreign key (matchId) references match_(matchId),
     foreign key (teamPlayerId) references team_player(teamPlayerId),
     foreign key (teamChampionshipId) references team_championship(teamChampionshipId),
+    foreign key (statisticId) references statistic(statisticId)
+);
+
+create table championship_stats(
+	championshipStatsId int auto_increment primary key,
+    championshipId int,
+    statisticId int, 
+    foreign key (championshipId) references championship(championshipId),
+    foreign key (statisticId) references statistic(statisticId)
+);
+
+create table team_stats(
+	teamStatsId int auto_increment primary key,
+    teamId int,
+    statisticId int,
+    foreign key (teamId) references team(teamId),
+    foreign key (statisticId) references statistic(statisticId)
+);
+
+create table player_stats(
+	playerStatsId int auto_increment primary key,
+    playerId int,
+    statisticId int,
+    foreign key (playerId) references player(playerId),
     foreign key (statisticId) references statistic(statisticId)
 );
