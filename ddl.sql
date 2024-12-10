@@ -6,21 +6,54 @@ create table statistic(
     statisticDescription varchar(25) not null
 );
 
+insert into statistic (statisticDescription) values
+('gol'),
+('assistência'),
+('passe'),
+('passe errado'),
+('lançamento'),
+('defesa'),
+('defesa dificil'),
+('finalização certa'),
+('finalização errada'),
+('desarme'),
+('interceptação'),
+('frango');
+
+create table position_(
+	positionId int auto_increment primary key,
+    positionDescription varchar(50)
+);
+
+insert into position_(positionDescription) values 
+('goleiro'),
+('zagueiro'),
+('lateral direiro'),
+('lateral esquerdo'),
+('volante'),
+('meio campo'),
+('ponta direita'),
+('ponta esquerda'),
+('atacante'),
+('centro-avante');
+
 create table team(
 	teamId int auto_increment primary key,
     teamName varchar(70) not null,
     qtdPlayers int not null,
-    firstColor varchar(10),
-    secondColor varchar(10)
+    firstColor varchar(10) not null,
+    secondColor varchar(10) not null
 );
 
 create table player(
 	playerId int auto_increment primary key,
-    playerName varchar(55),
-    playerBirthday date,
-    playerWeigth decimal(3,2),
-    playerHeight decimal(3,2),
-    playerNumber int not null
+    playerName varchar(55) not null,
+    playerBirthday date not null,
+    positionId int,
+    playerWeigth decimal(5,2) not null,
+    playerHeight decimal(5,2) not null,
+    playerNumber int not null,
+    foreign key (positionId) references position_(positionId)
 );
 
 create table team_player(
@@ -53,7 +86,8 @@ create table match_(
     teamVisit int,
     foreign key (teamHome) references team(teamId),
     foreign key (teamVisit) references team(teamId),
-    foreign key (championshipId) references championship(championshipId)
+    foreign key (championshipId) references championship(championshipId),
+    constraint chk_teams_different check (teamHome <> teamVisit)
 );
 
 create table match_stats(
@@ -91,3 +125,63 @@ create table player_stats(
     foreign key (playerId) references player(playerId),
     foreign key (statisticId) references statistic(statisticId)
 );
+
+delimiter //
+
+create trigger add_championship_stats
+after insert on match_stats
+for each row 
+begin 
+
+    declare champ_id int;
+    select championshipId
+    into champ_id 
+    from match_ 
+    where matchId = new.matchId;
+
+    insert into championship_stats (championshipId, statisticId) 
+    values (champ_id, new.statisticId);
+end;
+//
+
+delimiter ;
+
+delimiter //
+
+create trigger add_team_status
+after insert on match_stats
+for each row 
+begin 
+	 
+	declare team_id int;
+	select teamId
+	into team_id
+	from team_player
+	where teamPlayerId = new.teamPlayerId;
+	
+	insert into team_stats(teamId, statisticId)
+	values (team_id, new.statisticId);
+end;
+//
+
+delimiter ;
+
+delimiter //
+
+create trigger add_player_status
+after insert on match_stats
+for each row 
+begin 
+	 
+	declare player_id int;
+	select playerId
+	into player_id
+	from team_player
+	where teamPlayerId = new.teamPlayerId;
+	
+	insert into player_stats(playerId, statisticId)
+	values (player_id, new.statisticId);
+end;
+//
+
+delimiter ;
