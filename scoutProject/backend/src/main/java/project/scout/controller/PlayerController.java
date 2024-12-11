@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/scout/player")
@@ -17,6 +20,12 @@ public class PlayerController {
     public PlayerController(PlayerService playerService){
         this.playerService = playerService;
     }
+
+    @GetMapping
+    public List<Player> getAllPlayer() {
+        return playerService.getAllPlayers();
+    }
+    
 
     @PostMapping
     public Player createPlayer(@RequestBody Player player) {
