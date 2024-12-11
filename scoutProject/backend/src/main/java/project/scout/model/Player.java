@@ -20,8 +20,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Player {
-    private Position position;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "playerId")
@@ -35,7 +33,7 @@ public class Player {
     
     @ManyToOne
     @JoinColumn(name = "positionId", nullable = false)
-    private Position positionId;
+    private Position position;
 
     @Column(name = "playerWeigth")
     private double playerWeigth;
