@@ -2,6 +2,7 @@ package project.scout.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import project.scout.DTO.PlayerDTO;
 import project.scout.model.Player;
 import project.scout.service.PlayerService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/scout/player")
@@ -21,6 +23,11 @@ public class PlayerController {
 
     public PlayerController(PlayerService playerService){
         this.playerService = playerService;
+    }
+    
+    @PostMapping
+    public Player createPlayer(@RequestBody Player player) {
+        return playerService.createPlayer(player);
     }
 
     @GetMapping
@@ -34,10 +41,13 @@ public class PlayerController {
         return playerService.getPlayerByName(param);
     }
 
-    @PostMapping
-    public Player createPlayer(@RequestBody Player player) {
-        return playerService.createPlayer(player);
+    @PutMapping
+    public String updatePlayerByName(@RequestBody PlayerDTO request) {
+        return playerService.updatePlayerByName(request.getName(), request.getFieldToUpdate(), request.getNewValue());
     }
     
-    
+    @DeleteMapping("/name")
+    public String deletePlayerByName(@RequestParam String param){
+        return playerService.deletePlayerByName(param);
+    }
 }

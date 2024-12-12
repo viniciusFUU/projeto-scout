@@ -58,4 +58,57 @@ public class PlayerService {
 
         return playerName;
     }
+
+    public String updatePlayerByName(String name, String valueToAlter, String newValue) {
+        try {
+            for (Player player : playerRepository.findAll()) {
+                System.out.println(player.getPlayerName());
+                if (player.getPlayerName().equals(name)) {
+                    switch (valueToAlter) {
+                        case "playerName":
+                            player.setPlayerName(newValue);
+                            break;
+                        case "playerWeight":
+                            player.setPlayerWeigth(Double.parseDouble(newValue));
+                            break;
+                        case "playerHeight":
+                            player.setPlayerHeigth(Double.parseDouble(newValue));
+                            break;
+                        case "playerNumber":
+                            player.setPlayerNumber(Double.parseDouble(newValue));
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Campo inválido: " + valueToAlter);
+                    }
+                    playerRepository.save(player);
+                    return valueToAlter+" de jogador "+name+" alterado com sucesso";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        return "Jogador não foi encontrado";
+    }
+
+    public String deletePlayerByName(String name){
+        String playerName = "";
+
+        try {
+            for(Player player : playerRepository.findAll()){
+                if(player.getPlayerName().equals(name)){
+                    playerName = player.getPlayerName();
+                    playerRepository.delete(player);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(playerName.equals("")){
+            return "Nenhum jogador excluído";
+        }
+
+        return playerName+" excluído com sucesso.";
+    }
 }
