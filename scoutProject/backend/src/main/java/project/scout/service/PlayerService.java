@@ -62,7 +62,6 @@ public class PlayerService {
     public String updatePlayerByName(String name, String valueToAlter, String newValue) {
         try {
             for (Player player : playerRepository.findAll()) {
-                System.out.println(player.getPlayerName());
                 if (player.getPlayerName().equals(name)) {
                     switch (valueToAlter) {
                         case "playerName":
