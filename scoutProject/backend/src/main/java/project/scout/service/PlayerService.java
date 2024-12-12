@@ -37,4 +37,25 @@ public class PlayerService {
 
         return listPlayers;
     }
+
+    public String getPlayerByName(String name){
+        String playerName = "";
+
+        try {
+            for(Player player : playerRepository.findAll()){
+                if(player.getPlayerName().equals(name)){
+                    playerName = player.getPlayerName();
+                    break;
+                }
+            }    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(playerName.equals("")){
+            return "Não há jogadores com o nome "+name;
+        }
+
+        return playerName;
+    }
 }
