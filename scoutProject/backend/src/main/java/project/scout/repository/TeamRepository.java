@@ -9,4 +9,5 @@ import project.scout.model.Team;
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Integer>{
     // Optional<Team> findTeamByName(String teamName);
+    Team findByTeamId(int teamId);
 }

@@ -10,4 +10,5 @@ import project.scout.model.Player;
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Integer>{
     Optional<Player> findByPlayerName(String playerName);
+    Player findByPlayerId(int playerId);
 }
