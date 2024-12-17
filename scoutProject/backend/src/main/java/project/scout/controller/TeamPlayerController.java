@@ -10,7 +10,9 @@ import project.scout.service.TeamPlayerService;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -35,9 +37,19 @@ public class TeamPlayerController {
         return teamPlayerService.getAllTeamPlayer();
     }
 
-    @PutMapping
+    @PutMapping("/update-team")
     public String updateTeamOfPLayer(@RequestBody TeamPlayerDTO teamPlayerDTO) {        
-        return teamPlayerService.updateTeamOfPlayer(teamPlayerDTO.getPlayerId(), teamPlayerDTO.getTeamId());
+        return teamPlayerService.updateTeamOfPlayerByName(teamPlayerDTO.getPlayerName(), teamPlayerDTO.getTeamId());
+    }
+
+    @PutMapping("/update-position")
+    public String updatePositionOfPLayer(@RequestBody TeamPlayerDTO teamPlayerDTO) {        
+        return teamPlayerService.updatePositionsPlayerByName(teamPlayerDTO.getPlayerName(), teamPlayerDTO.getPositionId());
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteTeamPlayerById(@PathVariable int id){
+        return teamPlayerService.deleteTeamPlayerById(id);
     }
 }
 

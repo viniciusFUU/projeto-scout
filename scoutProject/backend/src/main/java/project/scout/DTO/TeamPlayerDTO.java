@@ -8,4 +8,6 @@ import lombok.Setter;
 public class TeamPlayerDTO {
     private int teamId;
     private int playerId;
+    private String playerName;
+    private int positionId;
 }

@@ -6,11 +6,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
-import project.scout.DTO.TeamDTO;
 import project.scout.model.Player;
+import project.scout.model.Position;
 import project.scout.model.Team;
 import project.scout.model.TeamPlayer;
 import project.scout.repository.PlayerRepository;
+import project.scout.repository.PositionRepository;
 import project.scout.repository.TeamPlayerRepository;
 import project.scout.repository.TeamRepository;
 
@@ -19,11 +20,13 @@ public class TeamPlayerService {
     private final TeamPlayerRepository teamPlayerRepository;
     private final TeamRepository teamRepository;
     private final PlayerRepository playerRepository;
+    private final PositionRepository positionRepository;
 
-    public TeamPlayerService(TeamPlayerRepository teamPlayerRepository, TeamRepository teamRepository, PlayerRepository playerRepository){
+    public TeamPlayerService(TeamPlayerRepository teamPlayerRepository, TeamRepository teamRepository, PlayerRepository playerRepository, PositionRepository positionRepository){
         this.teamPlayerRepository = teamPlayerRepository;
         this.teamRepository = teamRepository;
         this.playerRepository = playerRepository;
+        this.positionRepository = positionRepository;
     }
 
     public String createTeamPlayer(int teamParam, int playerParam){
@@ -48,22 +51,68 @@ public class TeamPlayerService {
         return listaTeamPlayers;
     }
 
-    public String updateTeamOfPlayer(int playerId, TeamDTO teamDTO){
+    public String updateTeamOfPlayerByName(String name, int teamId){
         String oldTeam = "";
         String teamUpdated = "";
         String playerUpdated = "";
 
         try {
-            TeamPlayer tryToUpdate = teamPlayerRepository.findByPlayer_Id(playerId);
-            
-            if(tryToUpdate != null){
-                tryToUpdate.setTeamId(teamDTO.set);
-                teamPlayerRepository.save(tryToUpdate);
+            Team newTeam = teamRepository.findByTeamId(teamId);
+
+            for(TeamPlayer teamPlayer : teamPlayerRepository.findAll()){
+                if(teamPlayer.getPlayerId().getPlayerName().equals(name)){
+                    oldTeam = teamPlayer.getTeamId().getTeamName();
+                    playerUpdated = teamPlayer.getPlayerId().getPlayerName();
+                    teamPlayer.setTeamId(newTeam);
+                    teamUpdated = teamPlayer.getTeamId().getTeamName();
+                    teamPlayerRepository.save(teamPlayer);
+                    break;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return "time do jogador "+playerUpdated+" alterado de "+oldTeam+" para "+teamUpdated;
+    }
+
+    public String updatePositionsPlayerByName(String name, int positionId){
+        String oldPosition = "";
+        String newPosition = "";
+        String playerUpdated = "";
+
+        try{
+            Position position = positionRepository.findByPositionId(positionId);
+
+            for(TeamPlayer teamPlayer : teamPlayerRepository.findAll()){
+                if(teamPlayer.getPlayerId().getPlayerName().equals(name)){
+                    oldPosition = teamPlayer.getPlayerId().getPosition().getPositionDescription();
+                    playerUpdated = teamPlayer.getPlayerId().getPlayerName();
+                    teamPlayer.getPlayerId().setPosition(position);
+                    newPosition = teamPlayer.getPlayerId().getPosition().getPositionDescription();
+                    teamPlayerRepository.save(teamPlayer);
+                    break;
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return "A posição do jogador "+playerUpdated+" passou de "+oldPosition+" para "+newPosition;
+    }
+
+    public String deleteTeamPlayerById(int id){
+        try {
+            for (TeamPlayer teamPlayer : teamPlayerRepository.findAll()){
+                if(teamPlayer.getTeamPlayerId() == id){
+                    teamPlayerRepository.deleteById(id);
+                }
+            }
+            return "Deletado com Sucesso";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "Erro ao deletar";
     }
 }
