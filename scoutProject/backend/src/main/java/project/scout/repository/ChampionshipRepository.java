@@ -7,5 +7,6 @@ import project.scout.model.Championship;
 
 @Repository
 public interface ChampionshipRepository extends JpaRepository<Championship, Integer>{
-
+    Championship findByChampionshipId(int championshipId);
+    Championship findByChampionshipName(String championshipName);
 }

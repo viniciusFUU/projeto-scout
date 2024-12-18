@@ -32,7 +32,4 @@ public class TeamChampionship {
     @ManyToOne
     @JoinColumn(name = "championshipId", nullable = false)
     private Championship championshipId;
-
-    @Column(name = "qtdInserido")
-    private int qtdInserido;
 }
