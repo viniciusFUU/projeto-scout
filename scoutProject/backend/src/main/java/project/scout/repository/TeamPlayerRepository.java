@@ -7,5 +7,5 @@ import project.scout.model.TeamPlayer;
 
 @Repository
 public interface TeamPlayerRepository extends JpaRepository<TeamPlayer, Integer>{
-    
+    TeamPlayer findByTeamPlayerId(int teamPlayerId);
 }
