@@ -26,22 +26,28 @@ public class MatchService {
     }
 
     public boolean IsExistTeamWithChampionship(String championshipName, String teamHomeParam, String teamVisitParam) {
-        boolean result = false;
+        boolean homeExists = false;
+        boolean visitExists = false;
     
         Championship championship = championshipRepository.findByChampionshipName(championshipName);
         Team teamHome = teamRepository.findByTeamName(teamHomeParam);
         Team teamVisit = teamRepository.findByTeamName(teamVisitParam);
-    
-        for (TeamChampionship teamChampionship : teamChampionshipRepository.findAll()) {
-            System.out.println(teamChampionship.getChampionshipId().getChampionshipName()+ teamChampionship.getTeamId().getTeamName());
-            if (teamChampionship.getChampionshipId().equals(championship) && 
-                teamChampionship.getTeamId().equals(teamHome) && 
-                teamChampionship.getTeamId().equals(teamVisit)) {
-                result = true;
+        
+        for(TeamChampionship teamChampionship : teamChampionshipRepository.findAll()){
+            if(teamChampionship.getChampionshipId() == championship && teamChampionship.getTeamId() == teamHome){
+                homeExists = true;
+            }
+
+            if(teamChampionship.getChampionshipId() == championship && teamChampionship.getTeamId() == teamVisit){
+                visitExists = true;
             }
         }
-    
-        return result;
+        
+        if(homeExists && visitExists){
+            return true;
+        }
+
+        return false;
     }
 
     public String createMatch(String championshipName, String teamHomeParam, String teamVisitParam){
