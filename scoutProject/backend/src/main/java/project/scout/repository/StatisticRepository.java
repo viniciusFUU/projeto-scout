@@ -6,4 +6,5 @@ import project.scout.model.Statistic;
 
 public interface StatisticRepository extends JpaRepository<Statistic, Integer>{
     Statistic findByStatisticDescription(String statisticDescription);
+    Statistic findById(int id);
 }
