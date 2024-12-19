@@ -1,5 +1,7 @@
 package project.scout.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import project.scout.model.Championship;
@@ -25,7 +27,7 @@ public class MatchService {
         this.teamRepository = teamRepository;
     }
 
-    public boolean IsExistTeamWithChampionship(String championshipName, String teamHomeParam, String teamVisitParam) {
+    public boolean isExistTeamWithChampionship(String championshipName, String teamHomeParam, String teamVisitParam) {
         boolean homeExists = false;
         boolean visitExists = false;
     
@@ -51,7 +53,7 @@ public class MatchService {
     }
 
     public String createMatch(String championshipName, String teamHomeParam, String teamVisitParam){
-        boolean isExist = IsExistTeamWithChampionship(championshipName, teamHomeParam, teamVisitParam);
+        boolean isExist = isExistTeamWithChampionship(championshipName, teamHomeParam, teamVisitParam);
 
         Championship championship = championshipRepository.findByChampionshipName(championshipName);
         Team teamHome = teamRepository.findByTeamName(teamHomeParam);
@@ -68,5 +70,40 @@ public class MatchService {
         }
 
         return "Os times "+match.getTeamHome().getTeamName()+" e "+match.getTeamVisit().getTeamName()+" não fazem parte do mesmo campeonato";
+    }
+
+    public List<Match> getAllMatchs(){
+        return matchRepository.findAll();
+    }
+
+    public String deleteMatch(String championshipParam, String teamHomeParam, String teamVisitParam){
+        boolean exist = isExistTeamWithChampionship(championshipParam, teamHomeParam, teamVisitParam);
+        List<Match> matchsList = matchRepository.findAll();
+
+        String teamHomeName = "";
+        String teamVisitName = "";
+
+        Championship championship = championshipRepository.findByChampionshipName(championshipParam);
+        Team teamHome = teamRepository.findByTeamName(teamHomeParam);
+        Team teamVisit = teamRepository.findByTeamName(teamVisitParam);
+
+        try {
+            if(exist){
+                for(Match match : matchsList){
+                    if(match.getChampionshipId() == championship && match.getTeamHome() == teamHome && match.getTeamVisit() == teamVisit){
+                        teamHomeName = match.getTeamHome().getTeamName();
+                        teamVisitName = match.getTeamVisit().getTeamName();
+                        matchRepository.delete(match);
+    
+                        return "Partida entre "+teamHomeName+" e "+teamVisitName+" foi excluído com sucesso!";
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "Sem partida entre os times";
+    
     }
 }
