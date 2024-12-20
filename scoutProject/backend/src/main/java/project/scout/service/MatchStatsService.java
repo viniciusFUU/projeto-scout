@@ -21,13 +21,14 @@ public class MatchStatsService {
     private final StatisticRepository statisticRepository;
     private final TeamPlayerRepository teamPlayerRepository;
     private final TeamChampionshipRepository teamChampionshipRepository;
-
-    public MatchStatsService(MatchStatsRepository matchStatsRepository, MatchRepository matchRepository, StatisticRepository statisticRepository, TeamPlayerRepository teamPlayerRepository, TeamChampionshipRepository teamChampionshipRepository){
+    private final PlayerStatsService playerStatsService;
+    public MatchStatsService(MatchStatsRepository matchStatsRepository, MatchRepository matchRepository, StatisticRepository statisticRepository, TeamPlayerRepository teamPlayerRepository, TeamChampionshipRepository teamChampionshipRepository, PlayerStatsService playerStatsService){
         this.matchStatsRepository = matchStatsRepository;
         this.matchRepository = matchRepository;
         this.statisticRepository = statisticRepository;
         this.teamPlayerRepository = teamPlayerRepository;
         this.teamChampionshipRepository = teamChampionshipRepository;
+        this.playerStatsService = playerStatsService;
 
     }
 
@@ -44,6 +45,8 @@ public class MatchStatsService {
         matchStats.setTeamChampionshipId(teamChampionship);
 
         matchStatsRepository.save(matchStats);
+
+        playerStatsService.insertPlayerStats(teamPlayer.getPlayerId().getPlayerId(), statistic.getStatisticId());
 
         return matchStats.getStatisticId().getStatisticDescription()+" do jogador "+matchStats.getTeamPlayerId().getPlayerId().getPlayerName();
     }
