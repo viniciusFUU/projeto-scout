@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
-import project.scout.model.MatchStats;
 import project.scout.model.Player;
 import project.scout.model.PlayerStats;
 import project.scout.model.Statistic;
@@ -19,31 +18,23 @@ public class PlayerStatsService {
     private final PlayerStatsRepository playerStatsRepository;
     private final PlayerRepository playerRepository;
     private final StatisticRepository statisticRepository;
-    private final MatchStatsRepository matchStatsRepository;
 
     public PlayerStatsService(PlayerStatsRepository playerStatsRepository, PlayerRepository playerRepository, StatisticRepository statisticRepository, MatchStatsRepository matchStatsRepository){
         this.playerStatsRepository = playerStatsRepository;
         this.playerRepository = playerRepository;
         this.statisticRepository = statisticRepository;
-        this.matchStatsRepository = matchStatsRepository;
     }
 
     public void insertPlayerStats(int playerId, int statisticId){
         Player player = playerRepository.findByPlayerId(playerId);
         Statistic statistic = statisticRepository.findById(statisticId);
 
-        List<MatchStats> statsList = matchStatsRepository.findAll();
-
         try{
-            for(MatchStats matchStats : statsList){
-                if(matchStats.getTeamPlayerId().getPlayerId() == player){
-                    PlayerStats playerStats = new PlayerStats();
-                    playerStats.setPlayerId(player);
-                    playerStats.setStatisticId(statistic);
+            PlayerStats playerStats = new PlayerStats();
+            playerStats.setPlayerId(player);
+            playerStats.setStatisticId(statistic);
 
-                    playerStatsRepository.save(playerStats);
-                }
-            }
+            playerStatsRepository.save(playerStats);
         } catch(Exception e){
             e.printStackTrace();
         }    
