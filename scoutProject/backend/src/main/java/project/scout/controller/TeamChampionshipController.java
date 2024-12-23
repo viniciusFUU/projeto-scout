@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.scout.DTO.TeamChampionshipDTO;
+import project.scout.model.Championship;
 import project.scout.model.Team;
 import project.scout.model.TeamChampionship;
 import project.scout.service.TeamChampionshipService;
@@ -37,9 +38,14 @@ public class TeamChampionshipController {
         return teamChampionshipService.getAllTeamChampionship();
     }
 
-    @GetMapping("/{championshipId}")
+    @GetMapping("/championship/{championshipId}")
     public List<Team> getTeamsOfChampionship(@PathVariable int championshipId) {
         return teamChampionshipService.getAllTeamsOfChampionship(championshipId);
+    }
+
+    @GetMapping("/team/{teamId}")
+    public List<Championship> getChampionshipOfTeam(@PathVariable int teamId) {
+        return teamChampionshipService.getAllChampionshipOfTeam(teamId);
     }
     
     

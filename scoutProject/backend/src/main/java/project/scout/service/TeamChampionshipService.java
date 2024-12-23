@@ -85,4 +85,16 @@ public class TeamChampionshipService {
 
         return teamsList;
     }
+
+    public List<Championship> getAllChampionshipOfTeam(int teamId){
+        List<Championship> championshipList = new ArrayList<>();
+
+        for(TeamChampionship teamChampionship : getAllTeamChampionship()){
+            if(teamChampionship.getTeamId().getTeamId() == teamId){
+                championshipList.add(teamChampionship.getChampionshipId());
+            }
+        }
+        
+        return championshipList;
+    }
 }
