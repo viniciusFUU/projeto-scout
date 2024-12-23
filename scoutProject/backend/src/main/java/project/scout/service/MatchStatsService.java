@@ -23,8 +23,9 @@ public class MatchStatsService {
     private final TeamChampionshipRepository teamChampionshipRepository;
     private final PlayerStatsService playerStatsService;
     private final TeamStatsService teamStatsService;
+    private final ChampionshipStatsService championshipStatsService;
 
-    public MatchStatsService(MatchStatsRepository matchStatsRepository, MatchRepository matchRepository, StatisticRepository statisticRepository, TeamPlayerRepository teamPlayerRepository, TeamChampionshipRepository teamChampionshipRepository, PlayerStatsService playerStatsService, TeamStatsService teamStatsService){
+    public MatchStatsService(MatchStatsRepository matchStatsRepository, MatchRepository matchRepository, StatisticRepository statisticRepository, TeamPlayerRepository teamPlayerRepository, TeamChampionshipRepository teamChampionshipRepository, PlayerStatsService playerStatsService, TeamStatsService teamStatsService, ChampionshipStatsService championshipStatsService){
         this.matchStatsRepository = matchStatsRepository;
         this.matchRepository = matchRepository;
         this.statisticRepository = statisticRepository;
@@ -32,7 +33,7 @@ public class MatchStatsService {
         this.teamChampionshipRepository = teamChampionshipRepository;
         this.playerStatsService = playerStatsService;
         this.teamStatsService = teamStatsService;
-
+        this.championshipStatsService = championshipStatsService;
     }
 
     public String insertStats(MatchStatsDTO matchStatsDTO){
@@ -51,6 +52,7 @@ public class MatchStatsService {
 
         playerStatsService.insertPlayerStats(teamPlayer.getPlayerId().getPlayerId(), statistic.getStatisticId());
         teamStatsService.insertTeamStats(teamPlayer.getTeamId().getTeamId(), statistic.getStatisticId());
+        championshipStatsService.insertDataIntoChampionshipStatsTable(teamChampionship.getChampionshipId().getChampionshipId(), statistic.getStatisticId());
 
         return matchStats.getStatisticId().getStatisticDescription()+" do jogador "+matchStats.getTeamPlayerId().getPlayerId().getPlayerName();
     }
