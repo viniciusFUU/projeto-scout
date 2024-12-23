@@ -51,6 +51,18 @@ public class TeamPlayerService {
         return listaTeamPlayers;
     }
 
+    public List<Player> getAllTeamsPlayer(int teamId){
+        List<Player> playersList = new ArrayList<>();
+        
+        for(TeamPlayer teamPlayer : getAllTeamPlayer()){
+            if(teamPlayer.getTeamId().getTeamId() == teamId){
+                playersList.add(teamPlayer.getPlayerId());
+            }
+        }
+
+        return playersList;
+    }
+
     public String updateTeamOfPlayerByName(String name, int teamId){
         String oldTeam = "";
         String teamUpdated = "";

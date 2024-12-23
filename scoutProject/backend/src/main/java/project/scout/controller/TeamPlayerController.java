@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.scout.DTO.TeamPlayerDTO;
+import project.scout.model.Player;
 import project.scout.model.TeamPlayer;
 import project.scout.service.TeamPlayerService;
 
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-
-
 
 @RestController
 @RequestMapping("/scout/team-player")
@@ -36,6 +35,12 @@ public class TeamPlayerController {
     public List<TeamPlayer> getAllTeamPlayers(){
         return teamPlayerService.getAllTeamPlayer();
     }
+
+    @GetMapping("/player/{teamId}")
+    public List<Player> getAllTeamsPlayer(@PathVariable int teamId) {
+        return teamPlayerService.getAllTeamsPlayer(teamId);
+    }
+    
 
     @PutMapping("/update-team")
     public String updateTeamOfPLayer(@RequestBody TeamPlayerDTO teamPlayerDTO) {        
