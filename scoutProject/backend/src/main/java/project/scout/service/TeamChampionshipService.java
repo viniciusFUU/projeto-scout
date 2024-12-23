@@ -73,4 +73,16 @@ public class TeamChampionshipService {
 
         return "Não relação entre os times";
     }
+
+    public List<Team> getAllTeamsOfChampionship(int championshipId){
+        List<Team> teamsList = new ArrayList<>();
+
+        for(TeamChampionship teamChampionship : getAllTeamChampionship()){
+            if(teamChampionship.getChampionshipId().getChampionshipId() == championshipId){
+                teamsList.add(teamChampionship.getTeamId());
+            }
+        }
+
+        return teamsList;
+    }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.scout.DTO.TeamChampionshipDTO;
+import project.scout.model.Team;
 import project.scout.model.TeamChampionship;
 import project.scout.service.TeamChampionshipService;
 
@@ -14,8 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-
-
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 @RequestMapping("/scout/team-championship")
@@ -36,6 +36,12 @@ public class TeamChampionshipController {
     public List<TeamChampionship> getAllTeamChampionship() {
         return teamChampionshipService.getAllTeamChampionship();
     }
+
+    @GetMapping("/{championshipId}")
+    public List<Team> getTeamsOfChampionship(@PathVariable int championshipId) {
+        return teamChampionshipService.getAllTeamsOfChampionship(championshipId);
+    }
+    
     
     @DeleteMapping
     public String deleteTeamChampionship(@RequestBody TeamChampionshipDTO championshipDTO){
