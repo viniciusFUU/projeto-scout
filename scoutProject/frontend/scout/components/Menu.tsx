@@ -14,6 +14,12 @@ function Menu ({onChangeScreen}: MenuProps){
             <TouchableOpacity onPress={() => onChangeScreen('Championship')}>
                 <Text style={styles.optionsText}>Championship</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => onChangeScreen('Teams')}>
+                <Text style={styles.optionsText}>Teams</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onChangeScreen('Players')}>
+                <Text style={styles.optionsText}>Players</Text>
+            </TouchableOpacity>
         </View>
     )
 }

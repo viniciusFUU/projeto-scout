@@ -5,7 +5,7 @@ function Home() {
 
     return (
         <View style={[styles.container, { height: screenHeight }]}>
-            <Text></Text>
+            <Text>Home</Text>
         </View>
     );
 }

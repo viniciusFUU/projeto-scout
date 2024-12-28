@@ -4,6 +4,8 @@ import Menu from "@/components/Menu";
 import Championship from "@/pages/championship";
 import Header from "@/components/header";
 import Home from "@/pages/home";
+import Teams from "@/pages/teams";
+import Players from "@/pages/players";
 
 function HomeScreen() { 
     const [currentScreen, setCurrentScreen] = useState('Home');
@@ -16,6 +18,10 @@ function HomeScreen() {
                 );
             case 'Championship':
                 return <Championship />;
+            case 'Teams':
+                return <Teams />
+            case 'Players':
+                return <Players/>
             default:
                 return (
                     <Home />
