@@ -1,4 +1,3 @@
-import { Link } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface MenuProps{
