@@ -1,3 +1,4 @@
+import apiClient from "@/api/apiClient";
 import { useState } from "react";
 import {
     StyleSheet,
@@ -8,6 +9,7 @@ import {
     Modal,
     Button,
     TextInput,
+    Alert,
 } from "react-native";
 
 interface menuProps {
@@ -28,7 +30,22 @@ function Home({ onChangeScreen }: menuProps) {
 
     const handleCloseModal = () => {
         setModalVisible(false);
+        setText("");
     };
+
+    const createChampionship = async (championshipName: string) => {
+        try {
+            const response = await apiClient.post('/championship', {
+                championshipId: null,
+                championshipName: championshipName || null,
+                qtdTeams: 0,
+            })
+
+            Alert.alert("Sucesso", "Campeonato criado com sucesso.");
+        } catch (error) {
+            console.error("Erro ao criar o campeonato: ");
+        }
+    }
 
     return (
         <View style={[styles.container, { height: screenHeight }]}>
@@ -43,25 +60,35 @@ function Home({ onChangeScreen }: menuProps) {
                     <Text style={styles.text}>Adicionar Jogadores</Text>
                 </TouchableOpacity>
             </View>
+
             <Modal
-                animationType="slide"
+                animationType="fade"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={handleCloseModal}
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modal}>
-                        <Text style={styles.modalText}>{modalContent}</Text>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalText}>{modalContent}</Text>
+                            <Button title="X" onPress={handleCloseModal} />
+                        </View>
                         <View style={styles.modalView}>
-                            <Text>Nome do time:</Text>
+                            <Text>Nome do Campeonato:</Text>
                             <TextInput
                                 placeholder="Digite aqui"
                                 value={text}
                                 onChangeText={(value) => setText(value)}
                                 style={styles.input}
                             />
+                            <Button title="Criar campeonato" onPress={() => {
+                                if(text.trim()){
+                                    createChampionship(text);
+                                }else{
+                                    alert("Por favor, insira um nome para o campeonato.")
+                                }
+                            }}/>
                         </View>
-                        <Button title="Fechar" onPress={handleCloseModal} />
                     </View>
                 </View>
             </Modal>
@@ -90,10 +117,10 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         flex: 1,
-        justifyContent: "flex-start", // Alinha o conteúdo no topo
+        justifyContent: "flex-start", 
         alignItems: "center",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
-        paddingTop: 50, // Adiciona um espaço no topo
+        paddingTop: 50, 
     },
     modal: {
         backgroundColor: "#fff",
@@ -108,12 +135,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 10,
-        textAlign: "center",
+        // textAlign: "center",
+    },
+    modalHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between"
     },
     input: {
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 5,
+        marginBottom: 5,
         padding: 10,
         width: "100%",
     },
