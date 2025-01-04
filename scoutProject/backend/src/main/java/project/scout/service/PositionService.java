@@ -1,5 +1,7 @@
 package project.scout.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import project.scout.model.Position;
@@ -11,6 +13,10 @@ public class PositionService {
 
     public PositionService(PositionRepository positionRepository){
         this.positionRepository = positionRepository;
+    }
+
+    public List<Position> getAllPositions(){
+        return positionRepository.findAll();
     }
 
     public Position getPositionByDescription(String posicao){

@@ -1,5 +1,7 @@
+import React from "react";
 import apiClient from "@/api/apiClient";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Picker } from "@react-native-picker/picker";
 import {
     StyleSheet,
     Text,
@@ -22,6 +24,39 @@ function Home({ onChangeScreen }: menuProps) {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState("");
     const [text, setText] = useState("");
+    const [positions, setPositions] = useState<{ positionId: number; positionDescription: string }[]>([]);
+    const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
+
+    const [teamData, setTeamData] = useState({
+        teamName: "",
+        firstColor: "",
+        secondColor: "",
+    });
+
+    const [playerData, setPlayerData] = useState({
+        playerName: "",
+        playerBirthday: "",
+        playerWeigth: "",
+        playerHeigth: "",
+        playerNumber: "",
+    });
+
+    const fetchPositions = async () => {
+        
+        try {
+            const response = await apiClient.get("/position");
+            setPositions(response.data);
+            
+        } catch (error) {
+            console.error("Erro ao buscar posições:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (modalContent === "Adicionar Jogadores") {
+            fetchPositions();
+        }
+    }, [modalContent]);
 
     const handleOpenModal = (content: string) => {
         setModalContent(content);
@@ -31,21 +66,49 @@ function Home({ onChangeScreen }: menuProps) {
     const handleCloseModal = () => {
         setModalVisible(false);
         setText("");
+        setTeamData({ teamName: "", firstColor: "", secondColor: "" });
+        setPlayerData({ playerName: "", playerBirthday: "", playerWeigth: "", playerHeigth: "", playerNumber: "" });
+        setSelectedPosition(null);
     };
 
     const createChampionship = async (championshipName: string) => {
         try {
-            const response = await apiClient.post('/championship', {
+            await apiClient.post("/championship", {
                 championshipId: null,
                 championshipName: championshipName || null,
                 qtdTeams: 0,
-            })
-
+            });
             Alert.alert("Sucesso", "Campeonato criado com sucesso.");
         } catch (error) {
-            console.error("Erro ao criar o campeonato: ");
+            console.error("Erro ao criar o campeonato:", error);
         }
-    }
+    };
+
+    const createTeam = async () => {
+        try {
+            await apiClient.post("/team", {
+                teamId: null,
+                ...teamData,
+                qtdPlayers: 0,
+            });
+            Alert.alert("Sucesso", "Time criado com sucesso.");
+        } catch (error) {
+            console.error("Erro ao criar o time:", error);
+        }
+    };
+
+    const createPlayer = async () => {
+        try {
+            await apiClient.post("/player", {
+                playerId: null,
+                ...playerData,
+                position: { positionId: selectedPosition },
+            });
+            Alert.alert("Sucesso", "Jogador criado com sucesso.");
+        } catch (error) {
+            console.error("Erro ao criar o jogador:", error);
+        }
+    };
 
     return (
         <View style={[styles.container, { height: screenHeight }]}>
@@ -74,20 +137,106 @@ function Home({ onChangeScreen }: menuProps) {
                             <Button title="X" onPress={handleCloseModal} />
                         </View>
                         <View style={styles.modalView}>
-                            <Text>Nome do Campeonato:</Text>
-                            <TextInput
-                                placeholder="Digite aqui"
-                                value={text}
-                                onChangeText={(value) => setText(value)}
-                                style={styles.input}
-                            />
-                            <Button title="Criar campeonato" onPress={() => {
-                                if(text.trim()){
-                                    createChampionship(text);
-                                }else{
-                                    alert("Por favor, insira um nome para o campeonato.")
-                                }
-                            }}/>
+                            {modalContent === "Adicionar Campeonato" && (
+                                <>
+                                    <Text>Nome do Campeonato:</Text>
+                                    <TextInput
+                                        placeholder="Digite aqui"
+                                        value={text}
+                                        onChangeText={(value) => setText(value)}
+                                        style={styles.input}
+                                    />
+                                    <Button
+                                        title="Criar campeonato"
+                                        onPress={() => {
+                                            if (text.trim()) {
+                                                createChampionship(text);
+                                            } else {
+                                                alert("Por favor, insira um nome para o campeonato.");
+                                            }
+                                        }}
+                                    />
+                                </>
+                            )}
+                            {modalContent === "Adicionar Times" && (
+                                <>
+                                    <Text>Nome do Time:</Text>
+                                    <TextInput
+                                        placeholder="Digite aqui"
+                                        value={teamData.teamName}
+                                        onChangeText={(value) => setTeamData({ ...teamData, teamName: value })}
+                                        style={styles.input}
+                                    />
+                                    <Text>Primeira Cor:</Text>
+                                    <TextInput
+                                        placeholder="Digite aqui"
+                                        value={teamData.firstColor}
+                                        onChangeText={(value) => setTeamData({ ...teamData, firstColor: value })}
+                                        style={styles.input}
+                                    />
+                                    <Text>Segunda Cor:</Text>
+                                    <TextInput
+                                        placeholder="Digite aqui"
+                                        value={teamData.secondColor}
+                                        onChangeText={(value) => setTeamData({ ...teamData, secondColor: value })}
+                                        style={styles.input}
+                                    />
+                                    <Button title="Criar time" onPress={createTeam} />
+                                </>
+                            )}
+                            {modalContent === "Adicionar Jogadores" && (
+                                <>
+                                    <Text>Nome do Jogador:</Text>
+                                    <TextInput
+                                        placeholder="Digite aqui"
+                                        value={playerData.playerName}
+                                        onChangeText={(value) => setPlayerData({ ...playerData, playerName: value })}
+                                        style={styles.input}
+                                    />
+                                    <Text>Data de Nascimento:</Text>
+                                    <TextInput
+                                        placeholder="DD/MM/AAAA"
+                                        value={playerData.playerBirthday}
+                                        onChangeText={(value) => setPlayerData({ ...playerData, playerBirthday: value })}
+                                        style={styles.input}
+                                    />
+                                    <Text>Posição:</Text>
+                                    <Picker
+                                        selectedValue={selectedPosition}
+                                        onValueChange={(value) => setSelectedPosition(value)}
+                                    >
+                                        {positions.map((position) => (
+                                            <Picker.Item
+                                                key={position.positionId}
+                                                label={position.positionDescription}
+                                                value={position.positionId}
+                                            />
+                                        ))}
+                                    </Picker>
+                                    <Text>Peso:</Text>
+                                    <TextInput
+                                        placeholder="Digite aqui"
+                                        value={playerData.playerWeigth}
+                                        onChangeText={(value) => setPlayerData({ ...playerData, playerWeigth: value })}
+                                        style={styles.input}
+                                    />
+                                    <Text>Altura:</Text>
+                                    <TextInput
+                                        placeholder="Digite aqui"
+                                        value={playerData.playerHeigth}
+                                        onChangeText={(value) => setPlayerData({ ...playerData, playerHeigth: value })}
+                                        style={styles.input}
+                                    />
+                                    <Text>Número:</Text>
+                                    <TextInput
+                                        placeholder="Digite aqui"
+                                        value={playerData.playerNumber}
+                                        onChangeText={(value) => setPlayerData({ ...playerData, playerNumber: value })}
+                                        style={styles.input}
+                                    />
+                                    <Button title="Criar jogador" onPress={createPlayer} />
+                                </>
+                            )}
                         </View>
                     </View>
                 </View>
@@ -117,10 +266,10 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         flex: 1,
-        justifyContent: "flex-start", 
+        justifyContent: "flex-start",
         alignItems: "center",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
-        paddingTop: 50, 
+        paddingTop: 50,
     },
     modal: {
         backgroundColor: "#fff",
@@ -135,11 +284,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 10,
-        // textAlign: "center",
     },
     modalHeader: {
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     input: {
         borderWidth: 1,
