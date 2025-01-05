@@ -201,18 +201,20 @@ function Home({ onChangeScreen }: menuProps) {
                                         style={styles.input}
                                     />
                                     <Text>Posição:</Text>
-                                    <Picker
-                                        selectedValue={selectedPosition}
-                                        onValueChange={(value) => setSelectedPosition(value)}
-                                    >
-                                        {positions.map((position) => (
-                                            <Picker.Item
-                                                key={position.positionId}
-                                                label={position.positionDescription}
-                                                value={position.positionId}
-                                            />
-                                        ))}
-                                    </Picker>
+                                    <View style={styles.select}>
+                                        <Picker
+                                            selectedValue={selectedPosition}
+                                            onValueChange={(value) => setSelectedPosition(value)}
+                                        >
+                                            {positions.map((position) => (
+                                                <Picker.Item
+                                                    key={position.positionId}
+                                                    label={position.positionDescription}
+                                                    value={position.positionId}
+                                                />
+                                            ))}
+                                        </Picker>
+                                    </View>
                                     <Text>Peso:</Text>
                                     <TextInput
                                         placeholder="Digite aqui"
@@ -251,10 +253,10 @@ const styles = StyleSheet.create({
     },
     containerView: {
         alignItems: "center",
-        marginBottom: 80,
+        marginBottom: 90,
     },
     text: {
-        margin: 10,
+        marginTop: 5,
         fontSize: 25,
         color: "#fff",
         fontWeight: "bold",
@@ -296,6 +298,12 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         padding: 10,
         width: "100%",
+    },
+    select: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 5,
+        marginBottom: 5,
     },
 });
 

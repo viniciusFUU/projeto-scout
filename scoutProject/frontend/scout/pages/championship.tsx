@@ -21,16 +21,28 @@ function Championship() {
     }, []);
 
     return (
-        <View>
+        <View style={styles.container} >
             {Championship.map(champ => (
-                <Text key={champ.championshipId}>{champ.championshipName}</Text>
+                <Text style={styles.text} key={champ.championshipId}>{champ.championshipName}</Text>
             ))}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    
+    container: {
+        alignItems: "center"
+    },
+    text: {
+        backgroundColor: "#1046ec",
+        width: 250,
+        padding: 10,
+        marginTop: 5,
+        color: '#fff',
+        textAlign: "center",
+        borderRadius: 5,
+        fontSize: 18
+    }
 });
 
 export default Championship;
