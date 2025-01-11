@@ -9,10 +9,12 @@ import project.scout.service.ChampionshipService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -39,6 +41,12 @@ public class ChampionshipController {
     public String getChampionshipByName(@RequestParam String param) {
         return championshipService.getChampionshipByName(param);
     }
+
+    @GetMapping("/top-scores/{championshipName}")
+    public HashMap<String, Integer> getTopScores(@PathVariable String championshipName) {
+        return championshipService.getTopScores(championshipName);
+    }
+    
 
     @PutMapping
     public String updateChampionshipByName(@RequestBody ChampionshipDTO championshipDTO) {        

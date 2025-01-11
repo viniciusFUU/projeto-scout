@@ -1,18 +1,23 @@
 package project.scout.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import project.scout.model.Championship;
+import project.scout.model.MatchStats;
 import project.scout.repository.ChampionshipRepository;
+import project.scout.repository.MatchStatsRepository;
 
 @Service
 public class ChampionshipService {
     private final ChampionshipRepository championshipRepository;
+    private final MatchStatsRepository matchStatsRepository;
 
-    public ChampionshipService(ChampionshipRepository championshipRepository){
+    public ChampionshipService(ChampionshipRepository championshipRepository, MatchStatsRepository matchStatsRepository){
         this.championshipRepository = championshipRepository;
+        this.matchStatsRepository = matchStatsRepository;
     }
 
     public String createChampionship(Championship championship){
@@ -85,5 +90,32 @@ public class ChampionshipService {
         }
 
         return "Não existe o campeonaro "+name;
+    }
+
+    public HashMap<String, Integer> getTopScores(String championshipName){
+        HashMap<String, Integer> topScores = new HashMap<>();
+        
+        try {
+            for(MatchStats match : matchStatsRepository.findAll()){
+                String playersName = "";
+                Integer goals = 0;
+                
+                if(match.getTeamChampionshipId().getChampionshipId().getChampionshipName().equals(championshipName)){
+                    playersName = match.getTeamPlayerId().getPlayerId().getPlayerName();
+                }
+
+                for(MatchStats match2 : matchStatsRepository.findAll()){
+                    if(match2.getTeamPlayerId().getPlayerId().getPlayerName().equals(playersName) && match2.getStatisticId().getStatisticId() == 1){
+                        goals+=1;
+                    }
+                }
+
+                topScores.put(playersName, goals);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return topScores;
     }
 }
