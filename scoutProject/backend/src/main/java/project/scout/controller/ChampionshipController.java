@@ -4,12 +4,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.scout.DTO.ChampionshipDTO;
+import project.scout.DTO.ChampionshipStatsDTO;
 import project.scout.model.Championship;
 import project.scout.service.ChampionshipService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,7 +43,7 @@ public class ChampionshipController {
     }
 
     @GetMapping("/top-scores/{championshipName}")
-    public HashMap<String, Integer> getTopScores(@PathVariable String championshipName) {
+    public List<ChampionshipStatsDTO> getTopScores(@PathVariable String championshipName) {
         return championshipService.getTopScores(championshipName);
     }
     

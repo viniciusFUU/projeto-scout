@@ -1,23 +1,20 @@
 package project.scout.service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import project.scout.DTO.ChampionshipStatsDTO;
 import project.scout.model.Championship;
-import project.scout.model.MatchStats;
 import project.scout.repository.ChampionshipRepository;
-import project.scout.repository.MatchStatsRepository;
 
 @Service
 public class ChampionshipService {
     private final ChampionshipRepository championshipRepository;
-    private final MatchStatsRepository matchStatsRepository;
 
-    public ChampionshipService(ChampionshipRepository championshipRepository, MatchStatsRepository matchStatsRepository){
+    public ChampionshipService(ChampionshipRepository championshipRepository){
         this.championshipRepository = championshipRepository;
-        this.matchStatsRepository = matchStatsRepository;
     }
 
     public String createChampionship(Championship championship){
@@ -92,28 +89,27 @@ public class ChampionshipService {
         return "Não existe o campeonaro "+name;
     }
 
-    public HashMap<String, Integer> getTopScores(String championshipName){
-        HashMap<String, Integer> topScores = new HashMap<>();
+    public List<ChampionshipStatsDTO> getTopScores(String championshipName){
+        List<ChampionshipStatsDTO> topScores = new ArrayList<>();
+        Championship championship = championshipRepository.findByChampionshipName(championshipName);
         
-        try {
-            for(MatchStats match : matchStatsRepository.findAll()){
-                String playersName = "";
-                Integer goals = 0;
-                
-                if(match.getTeamChampionshipId().getChampionshipId().getChampionshipName().equals(championshipName)){
-                    playersName = match.getTeamPlayerId().getPlayerId().getPlayerName();
+        List<Object[]> results = championshipRepository.getTopScores(championship.getChampionshipId());
+        
+        if(results != null){
+            try {
+                for (Object[] row : results) {
+                    ChampionshipStatsDTO championshipStatsDTO = new ChampionshipStatsDTO();
+                    String playerName = (String) row[0];
+                    championshipStatsDTO.setPlayerName(playerName);
+                    String teamName = (String) row[1];
+                    championshipStatsDTO.setTeamName(teamName);
+                    Integer goals = ((Number) row[2]).intValue();
+                    championshipStatsDTO.setScores(goals);
+                    topScores.add(championshipStatsDTO);
                 }
-
-                for(MatchStats match2 : matchStatsRepository.findAll()){
-                    if(match2.getTeamPlayerId().getPlayerId().getPlayerName().equals(playersName) && match2.getStatisticId().getStatisticId() == 1){
-                        goals+=1;
-                    }
-                }
-
-                topScores.put(playersName, goals);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return topScores;
