@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import project.scout.DTO.ChampionshipStatsDTO;
+import project.scout.DTO.TopAssistents;
+import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Championship;
 import project.scout.repository.ChampionshipRepository;
 
@@ -89,8 +90,8 @@ public class ChampionshipService {
         return "Não existe o campeonaro "+name;
     }
 
-    public List<ChampionshipStatsDTO> getTopScores(String championshipName){
-        List<ChampionshipStatsDTO> topScores = new ArrayList<>();
+    public List<TopScoresDTO> getTopScores(String championshipName){
+        List<TopScoresDTO> topScores = new ArrayList<>();
         Championship championship = championshipRepository.findByChampionshipName(championshipName);
         
         List<Object[]> results = championshipRepository.getTopScores(championship.getChampionshipId());
@@ -98,14 +99,14 @@ public class ChampionshipService {
         if(results != null){
             try {
                 for (Object[] row : results) {
-                    ChampionshipStatsDTO championshipStatsDTO = new ChampionshipStatsDTO();
+                    TopScoresDTO data = new TopScoresDTO();
                     String playerName = (String) row[0];
-                    championshipStatsDTO.setPlayerName(playerName);
+                    data.setPlayerName(playerName);
                     String teamName = (String) row[1];
-                    championshipStatsDTO.setTeamName(teamName);
+                    data.setTeamName(teamName);
                     Integer goals = ((Number) row[2]).intValue();
-                    championshipStatsDTO.setScores(goals);
-                    topScores.add(championshipStatsDTO);
+                    data.setScores(goals);
+                    topScores.add(data);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -113,5 +114,31 @@ public class ChampionshipService {
         }
 
         return topScores;
+    }
+
+    public List<TopAssistents> getTopAssistents(String championshipName){
+        List<TopAssistents> topAssistents = new ArrayList<>();
+        Championship championship = championshipRepository.findByChampionshipName(championshipName);
+
+        List<Object[]> results = championshipRepository.getTopAssistents(championship.getChampionshipId());
+
+        if(results != null){
+            try {
+                for(Object[] row : results){
+                    TopAssistents data = new TopAssistents();
+                    String playerName = (String) row[0];
+                    data.setPlayerName(playerName);
+                    String teamName = (String) row[1];
+                    data.setTeamName(teamName);
+                    int assistences = ((Number) row[2]).intValue();
+                    data.setAssistent(assistences);
+                    topAssistents.add(data);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return topAssistents;
     }
 }

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChampionshipStatsDTO {
+public class TopScoresDTO {
     private String playerName;
     private String teamName;
     private int scores;
