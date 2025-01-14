@@ -1,9 +1,11 @@
 package project.scout.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Team;
 import project.scout.repository.TeamRepository;
 
@@ -46,6 +48,35 @@ public class TeamService {
         return "Não existe o time "+name;
     }
 
+    public List<TopScoresDTO> getTopScores(String teamName){
+        List<TopScoresDTO> topScores = new ArrayList<>();
+        Team team = teamRepository.findByTeamName(teamName);
+
+        List<Object[]> results = teamRepository.getTopScores(team.getTeamId());
+
+        if(team != null){
+            try {
+                for(Object[] row : results){
+                    TopScoresDTO data = new TopScoresDTO();
+
+                    String teamRow = (String) row[0];
+                    data.setTeamName(teamRow);
+
+                    String playerRow = (String) row[1];
+                    data.setPlayerName(playerRow);
+
+                    Integer scores = ((Number) row[2]).intValue();
+                    data.setScores(scores);
+    
+                    topScores.add(data);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return topScores;
+    }
+
     public String updateTeamByName(String name, String valueToUpdate, String newValue){
         String oldValues = "";
 
@@ -57,13 +88,16 @@ public class TeamService {
                         oldValues = team.getTeamName();
                             team.setTeamName(newValue);
                             break;
+
                         case "qtdPlayers":
                             oldValues = String.format(oldValues, team.getQtdPlayers());
                             Integer newValueParam = Integer.parseInt(newValue); 
                             team.setQtdPlayers(newValueParam);
+
                         case "firstColor":
                             oldValues = team.getFirstColor();
                             team.setFirstColor(newValue);
+
                         case "secondColor":
                             oldValues = team.getSecondColor();
                             team.setSecondColor(oldValues);
