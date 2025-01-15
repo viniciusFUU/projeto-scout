@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Player;
 import project.scout.repository.PlayerRepository;
 
@@ -57,6 +58,33 @@ public class PlayerService {
         }
 
         return playerName;
+    }
+
+    public List<TopScoresDTO> getTopScores(String playerName){
+        Player player = playerRepository.findByPlayerName(playerName);
+        List<TopScoresDTO> topScores = new ArrayList<>();
+        
+        List<Object[]> results = playerRepository.getTopScores(player.getPlayerId());
+
+        if(results != null){
+            try {
+                for(Object[] row : results){
+                    TopScoresDTO data = new TopScoresDTO();
+                    String playerNameV = (String) row[0];
+                    data.setPlayerName(playerNameV);
+                    String teamName = (String) row[1];
+                    data.setTeamName(teamName);
+                    int goals = ((Integer) row[2]).intValue();
+                    data.setScores(goals);
+
+                    topScores.add(data);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return topScores;
     }
 
     public String updatePlayerByName(String name, String valueToAlter, String newValue) {

@@ -3,6 +3,7 @@ package project.scout.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.scout.DTO.PlayerDTO;
+import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Player;
 import project.scout.service.PlayerService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -37,9 +39,15 @@ public class PlayerController {
     
     
     @GetMapping("/name")
-    public String getMethodName(@RequestParam String param) {
+    public String getPlayerByName(@RequestParam String param) {
         return playerService.getPlayerByName(param);
     }
+
+    @GetMapping("/top-scores/{playerName}")
+    public List<TopScoresDTO> getTopScores(@PathVariable String playerName) {
+        return playerService.getTopScores(playerName);
+    }
+    
 
     @PutMapping
     public String updatePlayerByName(@RequestBody PlayerDTO request) {
