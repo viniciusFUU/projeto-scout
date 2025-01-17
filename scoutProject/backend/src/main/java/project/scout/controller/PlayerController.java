@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -43,9 +42,9 @@ public class PlayerController {
         return playerService.getPlayerByName(param);
     }
 
-    @GetMapping("/top-scores/{playerName}")
-    public List<TopScoresDTO> getTopScores(@PathVariable String playerName) {
-        return playerService.getTopScores(playerName);
+    @GetMapping("/top-scores")
+    public List<TopScoresDTO> getTopScores() {
+        return playerService.getTopScores();
     }
     
 

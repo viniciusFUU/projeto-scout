@@ -60,11 +60,10 @@ public class PlayerService {
         return playerName;
     }
 
-    public List<TopScoresDTO> getTopScores(String playerName){
-        Player player = playerRepository.findByPlayerName(playerName);
+    public List<TopScoresDTO> getTopScores(){
         List<TopScoresDTO> topScores = new ArrayList<>();
         
-        List<Object[]> results = playerRepository.getTopScores(player.getPlayerId());
+        List<Object[]> results = playerRepository.getTopScores();
 
         if(results != null){
             try {
@@ -74,7 +73,7 @@ public class PlayerService {
                     data.setPlayerName(playerNameV);
                     String teamName = (String) row[1];
                     data.setTeamName(teamName);
-                    int goals = ((Integer) row[2]).intValue();
+                    Integer goals = ((Number) row[2]).intValue();
                     data.setScores(goals);
 
                     topScores.add(data);

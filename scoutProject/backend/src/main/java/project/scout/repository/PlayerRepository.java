@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import project.scout.model.Player;
@@ -26,9 +25,8 @@ public interface PlayerRepository extends JpaRepository<Player, Integer>{
             on tp.player_id = p.player_id
             left join team t
             on tp.team_id = t.team_id
-            where player_name = :playerId
             group by t.team_name, p.player_name
             """, 
         nativeQuery = true)
-    List<Object[]> getTopScores(@Param ("playerId") int playerId);
+    List<Object[]> getTopScores();
 }
