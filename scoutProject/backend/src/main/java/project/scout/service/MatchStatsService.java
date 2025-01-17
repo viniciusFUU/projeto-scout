@@ -42,20 +42,24 @@ public class MatchStatsService {
         TeamPlayer teamPlayer = teamPlayerRepository.findByTeamPlayerId(matchStatsDTO.getTeamPlayerId());
         TeamChampionship teamChampionship = teamChampionshipRepository.findByTeamChampionshipId(matchStatsDTO.getTeamChampionshipId());
 
-        if (matchRepository.findAll() != null){
-            MatchStats matchStats = new MatchStats();
-            matchStats.setMatchId(match);
-            matchStats.setStatisticId(statistic);
-            matchStats.setTeamPlayerId(teamPlayer);
-            matchStats.setTeamChampionshipId(teamChampionship);
-    
-            matchStatsRepository.save(matchStats);
-    
-            playerStatsService.insertPlayerStats(teamPlayer.getPlayerId().getPlayerId(), statistic.getStatisticId());
-            teamStatsService.insertTeamStats(teamPlayer.getTeamId().getTeamId(), statistic.getStatisticId());
-            championshipStatsService.insertDataIntoChampionshipStatsTable(teamChampionship.getChampionshipId().getChampionshipId(), statistic.getStatisticId());
-    
-            return matchStats.getStatisticId().getStatisticDescription()+" do jogador "+matchStats.getTeamPlayerId().getPlayerId().getPlayerName();
+        try {
+            if (matchRepository.findAll() != null){
+                MatchStats matchStats = new MatchStats();
+                matchStats.setMatchId(match);
+                matchStats.setStatisticId(statistic);
+                matchStats.setTeamPlayerId(teamPlayer);
+                matchStats.setTeamChampionshipId(teamChampionship);
+        
+                matchStatsRepository.save(matchStats);
+        
+                playerStatsService.insertPlayerStats(teamPlayer.getPlayerId().getPlayerId(), statistic.getStatisticId());
+                teamStatsService.insertTeamStats(teamPlayer.getTeamId().getTeamId(), statistic.getStatisticId());
+                championshipStatsService.insertDataIntoChampionshipStatsTable(teamChampionship.getChampionshipId().getChampionshipId(), statistic.getStatisticId());
+        
+                return matchStats.getStatisticId().getStatisticDescription()+" do jogador "+matchStats.getTeamPlayerId().getPlayerId().getPlayerName();
+            }    
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return "Não existe essa partida";
