@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import project.scout.DTO.ChampionshipDTO;
 import project.scout.DTO.TopAssistents;
+import project.scout.DTO.TopPassersDTO;
 import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Championship;
 import project.scout.service.ChampionshipService;
@@ -53,6 +54,10 @@ public class ChampionshipController {
         return championshipService.getTopAssistents(championshipName);
     }
     
+    @GetMapping("/top-passers/{championshipName}")
+    public List<TopPassersDTO> getTopPassers(@PathVariable String championshipName) {
+        return championshipService.getTopPassers(championshipName);
+    }
 
     @PutMapping
     public String updateChampionshipByName(@RequestBody ChampionshipDTO championshipDTO) {        

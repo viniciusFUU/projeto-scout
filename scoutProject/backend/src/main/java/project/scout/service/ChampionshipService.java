@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import project.scout.DTO.TopAssistents;
+import project.scout.DTO.TopPassersDTO;
 import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Championship;
 import project.scout.repository.ChampionshipRepository;
@@ -140,5 +141,34 @@ public class ChampionshipService {
         }
 
         return topAssistents;
+    }
+
+    public List<TopPassersDTO> getTopPassers(String championshipName){
+        List<TopPassersDTO> topPassers = new ArrayList<>();
+        Championship championship = championshipRepository.findByChampionshipName(championshipName);
+
+        List<Object[]> results = championshipRepository.getTopPassers(championship.getChampionshipId());
+
+        if(championship != null){
+            try {
+                for(Object[] row : results){
+                    TopPassersDTO topPassersResult = new TopPassersDTO();
+                    String playerName = (String) row[0];
+                    topPassersResult.setPlayerName(playerName);
+                    String teamName = (String) row[1];
+                    topPassersResult.setTeamName(teamName);
+                    Integer passes = ((Number) row[2]).intValue();
+                    topPassersResult.setPasses(passes);
+                
+                    topPassers.add(topPassersResult);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return topPassers;
+        }
+
+        return topPassers;
     }
 }
