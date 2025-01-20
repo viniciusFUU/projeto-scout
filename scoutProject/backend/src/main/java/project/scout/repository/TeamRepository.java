@@ -27,9 +27,9 @@ public interface TeamRepository extends JpaRepository<Team, Integer>{
             on tp.team_id = t.team_id
             left join player p
             on tp.player_id = p.player_id
-            where ms.statistic_id = 1 and 
+            where ms.statistic_id = :statistic and 
             t.team_id = :teamId
             group by t.team_name, p.player_name
             """, nativeQuery = true)
-            List<Object[]> getTopScores(@Param("teamId") int teamId);
+            List<Object[]> getTopScores(@Param("teamId") int teamId, int statistic);
 }

@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import project.scout.DTO.TopAssistentsDTO;
+import project.scout.DTO.TopPassersDTO;
 import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Team;
 import project.scout.repository.TeamRepository;
@@ -52,7 +54,7 @@ public class TeamService {
         List<TopScoresDTO> topScores = new ArrayList<>();
         Team team = teamRepository.findByTeamName(teamName);
 
-        List<Object[]> results = teamRepository.getTopScores(team.getTeamId());
+        List<Object[]> results = teamRepository.getTopScores(team.getTeamId(), 1);
 
         if(team != null){
             try {
@@ -75,6 +77,74 @@ public class TeamService {
             }
         }
         return topScores;
+    }
+
+    public List<TopAssistentsDTO> getTopAssistents(String teamName){
+        List<TopAssistentsDTO> topAssistents = new ArrayList<>();
+        Team team = teamRepository.findByTeamName(teamName);
+
+        List<Object[]> results = teamRepository.getTopScores(team.getTeamId(), 2);
+
+        if (results == null){
+            return topAssistents;
+        }
+
+        if(team != null){
+            try {
+                for(Object[] row : results){
+                    TopAssistentsDTO data = new TopAssistentsDTO();
+
+                    String teamRow = (String) row[0];
+                    data.setTeamName(teamRow);
+
+                    String playerRow = (String) row[1];
+                    data.setPlayerName(playerRow);
+
+                    Integer assist = ((Number) row[2]).intValue();
+                    data.setAssistent(assist);
+    
+                    topAssistents.add(data);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return topAssistents;
+    }
+
+    public List<TopPassersDTO> getTopPassers(String teamName){
+        List<TopPassersDTO> topPassers = new ArrayList<>();
+        Team team = teamRepository.findByTeamName(teamName);
+
+        List<Object[]> results = teamRepository.getTopScores(team.getTeamId(), 3);
+
+        if (results == null){
+            return topPassers;
+        }
+
+        if(team != null){
+            try {
+                for(Object[] row : results){
+                    TopPassersDTO data = new TopPassersDTO();
+
+                    String teamRow = (String) row[0];
+                    data.setTeamName(teamRow);
+
+                    String playerRow = (String) row[1];
+                    data.setPlayerName(playerRow);
+
+                    Integer pass = ((Number) row[2]).intValue();
+                    data.setPasses(pass);
+    
+                    topPassers.add(data);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return topPassers;
     }
 
     public String updateTeamByName(String name, String valueToUpdate, String newValue){

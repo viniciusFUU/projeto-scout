@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.scout.DTO.TeamDTO;
+import project.scout.DTO.TopAssistentsDTO;
+import project.scout.DTO.TopPassersDTO;
 import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Team;
 import project.scout.service.TeamService;
@@ -45,6 +47,16 @@ public class TeamController {
     @GetMapping("/top-scores/{teamName}")
     public List<TopScoresDTO> getTopScores(@PathVariable String teamName) {
         return teamService.getTopScores(teamName);
+    }
+
+    @GetMapping("/top-assistens/{teamName}")
+    public List<TopAssistentsDTO> getTopAssistents(@PathVariable String teamName) {
+        return teamService.getTopAssistents(teamName);
+    }
+
+    @GetMapping("/top-passers/{teamName}")
+    public List<TopPassersDTO> getTopPassers(@PathVariable String teamName) {
+        return teamService.getTopPassers(teamName);
     }
 
     @PutMapping
