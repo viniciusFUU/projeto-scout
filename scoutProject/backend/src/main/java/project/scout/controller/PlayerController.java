@@ -3,6 +3,8 @@ package project.scout.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.scout.DTO.PlayerDTO;
+import project.scout.DTO.TopAssistentsDTO;
+import project.scout.DTO.TopPassersDTO;
 import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Player;
 import project.scout.service.PlayerService;
@@ -45,6 +47,16 @@ public class PlayerController {
     @GetMapping("/top-scores")
     public List<TopScoresDTO> getTopScores() {
         return playerService.getTopScores();
+    }
+
+    @GetMapping("/top-assistents")
+    public List<TopAssistentsDTO> getTopAssistents() {
+        return playerService.getTopAssistents();
+    }
+
+    @GetMapping("/top-passers")
+    public List<TopPassersDTO> getTopPassers() {
+        return playerService.getTopPassers();
     }
     
 
