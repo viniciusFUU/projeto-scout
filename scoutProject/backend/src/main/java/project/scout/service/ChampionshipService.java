@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import project.scout.DTO.TopAssistents;
+import project.scout.DTO.TopAssistentsDTO;
 import project.scout.DTO.TopPassersDTO;
 import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Championship;
@@ -95,7 +95,7 @@ public class ChampionshipService {
         List<TopScoresDTO> topScores = new ArrayList<>();
         Championship championship = championshipRepository.findByChampionshipName(championshipName);
         
-        List<Object[]> results = championshipRepository.getTopScores(championship.getChampionshipId());
+        List<Object[]> results = championshipRepository.getTopStats(championship.getChampionshipId(), 1);
         
         if(results != null){
             try {
@@ -117,16 +117,16 @@ public class ChampionshipService {
         return topScores;
     }
 
-    public List<TopAssistents> getTopAssistents(String championshipName){
-        List<TopAssistents> topAssistents = new ArrayList<>();
+    public List<TopAssistentsDTO> getTopAssistents(String championshipName){
+        List<TopAssistentsDTO> topAssistents = new ArrayList<>();
         Championship championship = championshipRepository.findByChampionshipName(championshipName);
 
-        List<Object[]> results = championshipRepository.getTopAssistents(championship.getChampionshipId());
+        List<Object[]> results = championshipRepository.getTopStats(championship.getChampionshipId(), 2);
 
         if(results != null){
             try {
                 for(Object[] row : results){
-                    TopAssistents data = new TopAssistents();
+                    TopAssistentsDTO data = new TopAssistentsDTO();
                     String playerName = (String) row[0];
                     data.setPlayerName(playerName);
                     String teamName = (String) row[1];
@@ -140,6 +140,7 @@ public class ChampionshipService {
             }
         }
 
+        System.out.println(topAssistents);
         return topAssistents;
     }
 
@@ -147,7 +148,7 @@ public class ChampionshipService {
         List<TopPassersDTO> topPassers = new ArrayList<>();
         Championship championship = championshipRepository.findByChampionshipName(championshipName);
 
-        List<Object[]> results = championshipRepository.getTopPassers(championship.getChampionshipId());
+        List<Object[]> results = championshipRepository.getTopStats(championship.getChampionshipId(), 3);
 
         if(championship != null){
             try {

@@ -18,7 +18,7 @@ public interface ChampionshipRepository extends JpaRepository<Championship, Inte
         select 
         p.player_name as playerName,
         t.team_name as teamName,
-        count(*) as goals
+        count(*)
         from match_stats ms
         left join team_championship tc 
         on ms.team_championship_id = tc.team_championship_id
@@ -28,46 +28,9 @@ public interface ChampionshipRepository extends JpaRepository<Championship, Inte
         on ms.team_player_id = tp.team_player_id
         left join player p
         on tp.player_id = p.player_id
-        where tc.championship_id = :championshipId and ms.statistic_id = 1
+        where tc.championship_id = :championshipId and ms.statistic_id = :statistic
         group by p.player_name, t.team_name
         """, nativeQuery = true)
-    List<Object[]> getTopScores(@Param("championshipId") int championshipId);
+    List<Object[]> getTopStats(@Param("championshipId") int championshipId, int statistic);
 
-    @Query(value = """
-        select 
-        p.player_name as playerName,
-        t.team_name as teamName,
-        count(*) as assists
-        from match_stats ms
-        left join team_championship tc 
-        on ms.team_championship_id = tc.team_championship_id
-        left join team t
-        on tc.team_id = t.team_id
-        left join team_player tp
-        on ms.team_player_id = tp.team_player_id
-        left join player p
-        on tp.player_id = p.player_id
-        where tc.championship_id = :championshipId and ms.statistic_id = 2
-        group by p.player_name, t.team_name
-        """, nativeQuery = true)
-    List<Object[]> getTopAssistents(@Param("championshipId") int championshipId);
-
-    @Query(value = """
-        select 
-        p.player_name as playerName,
-        t.team_name as teamName,
-        count(*) as passes
-        from match_stats ms
-        left join team_championship tc 
-        on ms.team_championship_id = tc.team_championship_id
-        left join team t
-        on tc.team_id = t.team_id
-        left join team_player tp
-        on ms.team_player_id = tp.team_player_id
-        left join player p
-        on tp.player_id = p.player_id
-        where tc.championship_id = :championshipId and ms.statistic_id = 3
-        group by p.player_name, t.team_name
-        """, nativeQuery = true)
-    List<Object[]> getTopPassers(@Param("championshipId") int championshipId);
 }

@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.scout.DTO.ChampionshipDTO;
-import project.scout.DTO.TopAssistents;
+import project.scout.DTO.TopAssistentsDTO;
 import project.scout.DTO.TopPassersDTO;
 import project.scout.DTO.TopScoresDTO;
 import project.scout.model.Championship;
@@ -50,7 +50,7 @@ public class ChampionshipController {
     }
 
     @GetMapping("/top-assistents/{championshipName}")
-    public List<TopAssistents> getTopAssistents(@PathVariable String championshipName) {
+    public List<TopAssistentsDTO> getTopAssistents(@PathVariable String championshipName) {
         return championshipService.getTopAssistents(championshipName);
     }
     
