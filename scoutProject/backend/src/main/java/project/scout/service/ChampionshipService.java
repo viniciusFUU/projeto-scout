@@ -150,6 +150,10 @@ public class ChampionshipService {
 
         List<Object[]> results = championshipRepository.getTopStats(championship.getChampionshipId(), 3);
 
+        if(results == null){
+            return topPassers;
+        }
+
         if(championship != null){
             try {
                 for(Object[] row : results){
@@ -166,10 +170,8 @@ public class ChampionshipService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            return topPassers;
         }
-
+        
         return topPassers;
     }
 }
